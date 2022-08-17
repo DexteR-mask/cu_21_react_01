@@ -9,29 +9,55 @@ class App extends Component {
       {name: 'Person Two', age: '24'},
       {name: 'Person Three', age: '30'},
       {name: 'Person Four', age: '27'},
-    ]
+    ],
+    showPersons: false
   } 
 
   onNameChangeHanler = () => {
+    // DONOT MUTATE THE STATE DIRECTLYY
     // this.state.persons[0].name = 'My Person'
+
+    this.setState( {
+      persons: [
+        {name: 'My Person', age: '25'},
+        {name: 'Person Two', age: '24'},
+        {name: 'Person Three', age: '30'},
+        {name: 'Person Four', age: '27'},
+      ]
+    } );
+  }
+
+  togglePersons = () => {
+    let stateValue = this.state.showPersons
+    this.setState({ showPersons: !stateValue })
   }
 
   render() {
+    let persons = ( <h3>Please Click on the Toggle Persons Button!</h3> )
+
+    if(this.state.showPersons === true) {
+      persons = (
+        <div className='container'>
+          <Person name={this.state.persons[0].name} age={this.state.persons[0].age} />
+          <Person name={this.state.persons[1].name} age={this.state.persons[1].age} />
+          <Person name={this.state.persons[2].name} age={this.state.persons[2].age} />
+          <Person name={this.state.persons[3].name} age={this.state.persons[3].age} />
+          <hr />
+          <button onClick={this.onNameChangeHanler} className='btn btn-danger'>Change Name</button>
+        </div>
+      )
+    }
+
     return (
       <div>
         <div className="container-fluid">
           <h1>Person Management App</h1> <hr />
         </div>
-        <div className='container'>
-            <Person name={this.state.persons[0].name} age={this.state.persons[0].age} />
-            <Person name={this.state.persons[1].name} age={this.state.persons[1].age} />
-            <Person name={this.state.persons[2].name} age={this.state.persons[2].age} />
-            <Person name={this.state.persons[3].name} age={this.state.persons[3].age} />
-
-            <hr />
-
-            <button onClick={this.onNameChangeHanler} className='btn btn-danger'>Change Name</button>
+        <div className="container">
+          <button onClick={this.togglePersons} className='btn btn-success'>Toggle Persons</button>
+          <hr />
         </div>
+        { persons }
       </div>
     )
   }
