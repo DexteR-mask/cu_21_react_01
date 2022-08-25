@@ -2,16 +2,33 @@ import { Component } from 'react'
 import Person from './Person/Person';
 
 class App extends Component {
-  // JavaScript
-  state = {
-    persons: [
-      {name: 'Person One', age: '25'},
-      {name: 'Person Two', age: '24'},
-      {name: 'Person Three', age: '30'},
-      {name: 'Person Four', age: '27'},
-    ],
-    showPersons: false
-  } 
+  constructor(props) {
+    console.log(`[App.js] contructor`)
+    super(props)
+    // CREATE YOUR OWN STATE
+    this.state = {
+      persons: [
+        {id: '100', name: 'Person 1', age: '25'},
+        {id: '200', name: 'Person 2', age: '24'},
+        {id: '300', name: 'Person 3', age: '30'},
+        {id: '400', name: 'Person 4', age: '27'},
+        {id: '500', name: 'Person 5', age: '28'}
+      ],
+      showPersons: false
+    }
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    console.log(`[App.js] getDerivedStateFromProps`)
+    console.log(props)
+    console.log(state)
+    // Always return the update value of the state & null if no stte is defined
+    return state
+  }
+
+  componentDidMount() {
+    console.log(`[App.js] componentDidMount`)
+  }
 
   onNameChangeHanler = () => {
     // DONOT MUTATE THE STATE DIRECTLYY
@@ -19,10 +36,11 @@ class App extends Component {
 
     this.setState( {
       persons: [
-        {name: 'My Person', age: '25'},
+        {name: 'Person One', age: '25'},
         {name: 'Person Two', age: '24'},
         {name: 'Person Three', age: '30'},
         {name: 'Person Four', age: '27'},
+        {name: 'Person Five', age: '28'}
       ]
     } );
   }
@@ -32,16 +50,28 @@ class App extends Component {
     this.setState({ showPersons: !stateValue })
   }
 
-  render() {
-    let persons = ( <h3>Please Click on the Toggle Persons Button!</h3> )
+  deletePersonHandler = (id) => {
+    const personCopy = [...this.state.persons]
+    personCopy.filter(person => person.id !== id)
+    this.setState( {persons: personCopy} )
+  }
 
-    if(this.state.showPersons === true) {
+  render() {
+    console.log(`[App.js] render`)
+
+    let persons = ( <h3>Click on the Toggle Persons button!</h3> )
+
+    if(this.state.showPersons) {
       persons = (
         <div className='container'>
-          <Person name={this.state.persons[0].name} age={this.state.persons[0].age} />
-          <Person name={this.state.persons[1].name} age={this.state.persons[1].age} />
-          <Person name={this.state.persons[2].name} age={this.state.persons[2].age} />
-          <Person name={this.state.persons[3].name} age={this.state.persons[3].age} />
+          {
+            this.state.persons.map( (person, index) => 
+              <Person 
+                key={person.id}
+                name={person.name} 
+                age={person.age}
+                deleted={() => this.deletePersonHandler(person.id)} /> )
+          }
           <hr />
           <button onClick={this.onNameChangeHanler} className='btn btn-danger'>Change Name</button>
         </div>
@@ -51,13 +81,13 @@ class App extends Component {
     return (
       <div>
         <div className="container-fluid">
-          <h1>Person Management App</h1> <hr />
+          <h1> {this.props.appTitle} </h1> <hr />
         </div>
         <div className="container">
           <button onClick={this.togglePersons} className='btn btn-success'>Toggle Persons</button>
           <hr />
+          { persons }
         </div>
-        { persons }
       </div>
     )
   }
