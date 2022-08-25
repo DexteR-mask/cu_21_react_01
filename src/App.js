@@ -50,9 +50,9 @@ class App extends Component {
     this.setState({ showPersons: !stateValue })
   }
 
-  deletePersonHandler = (id) => {
+  deletePersonHandler = (index) => {
     const personCopy = [...this.state.persons]
-    personCopy.filter(person => person.id !== id)
+    personCopy.splice(index, 1)
     this.setState( {persons: personCopy} )
   }
 
@@ -68,9 +68,11 @@ class App extends Component {
             this.state.persons.map( (person, index) => 
               <Person 
                 key={person.id}
+                persons={this.state.persons}
+                showPersons={this.state.showPersons}
                 name={person.name} 
                 age={person.age}
-                deleted={() => this.deletePersonHandler(person.id)} /> )
+                deleted={() => this.deletePersonHandler(index)} /> )
           }
           <hr />
           <button onClick={this.onNameChangeHanler} className='btn btn-danger'>Change Name</button>
@@ -79,7 +81,7 @@ class App extends Component {
     }
 
     return (
-      <div>
+      <>
         <div className="container-fluid">
           <h1> {this.props.appTitle} </h1> <hr />
         </div>
@@ -88,7 +90,7 @@ class App extends Component {
           <hr />
           { persons }
         </div>
-      </div>
+      </>
     )
   }
 } 
