@@ -4,6 +4,11 @@
     margin: 10px;
 }
 
+.my-container {
+    display: flex;
+    justify-content: space-between;
+}
+
 .my-div {
     width: 100%;
     display: flex;
